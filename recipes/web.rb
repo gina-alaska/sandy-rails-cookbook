@@ -1,3 +1,10 @@
 include_recipe "sandy::application"
-include_recipe "sandy::unicorn"
+
+service 'sandy-web-1' do
+  #reload_command
+  #restart_command
+  action [:start, :enable]
+  subscribes :restart, "template[#{node['sandy']['install_dir']}/.env]"
+end
+
 include_recipe "sandy::nginx"
