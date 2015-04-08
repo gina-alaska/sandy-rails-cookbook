@@ -10,7 +10,7 @@ default['sandy']['git-action'] = 'checkout'
 default['sandy']['install_dir'] = '/opt/sandy/sandy'
 default['sandy']['application'] = {
   'name' => 'sandy',
-  'version' => '0.0.0+20150407165920-1'
+  'version' => '0.0.1-1'
 }
 
 #Rails configuration
