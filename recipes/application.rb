@@ -43,7 +43,7 @@ template "#{node['sandy']['install_dir']}/.env" do
     influxdb_username: 'sandy',
     influxdb_password: influx_password,
     influxdb_servers: influx_servers,
-    sidekiq_queue: node['sidekiq']['queue']
+    sidekiq_queue: node['sidekiq']['queue'],
     redis_url: "redis://#{redis_master['ipaddress']}:6379",
     redis_namespace: node['sandy']['redis']['namespace'],
     sandy_cache_path: node['sandy']['cache_dir'],
