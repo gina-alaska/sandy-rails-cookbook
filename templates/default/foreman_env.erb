@@ -1,0 +1,3 @@
+<%- @env.each_key do |key| %>
+<%= key.upcase %>=<%=@env[key]%>
+<%- end %>
