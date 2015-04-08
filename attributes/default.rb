@@ -26,7 +26,7 @@ default['sandy']['worker-log-dir'] = '/var/log/sidekiq'
 default['sandy']['worker']['scripts-git-repo'] = 'git://github.com/gina-alaska/sandy-utils'
 default['sandy']['worker']['scripts-git-revision'] = 'master'
 default['sandy']['worker']['scripts-git-action'] = 'checkout'
-default['sandy']['worker']['queues']['default'] = 1
+default['sandy']['worker']['queue'] = nil
 
 default['sandy']['database']['hostname'] = "localhost"
 
