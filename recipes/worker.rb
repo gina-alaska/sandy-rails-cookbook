@@ -21,15 +21,14 @@ execute 'bundle-install' do
   subscribes :run, "git[#{node['sandy']['worker']['scripts-path']}]", :delayed
 end
 
-service 'sandy-default-worker-1' do
+runit_service "sandy-default-worker-1" do
+  sv_templates false
   action [:start, :enable]
   subscribes :restart, "template[#{node['sandy']['install_dir']}/.env]"
 end
 
-service 'sandy-worker-1' do
+runit_service "sandy-worker-1" do
+  sv_templates false
   action [:start, :enable]
   subscribes :restart, "template[#{node['sandy']['install_dir']}/.env]"
-  not_if { node['sandy']['queue'].nil? }
 end
-
-
