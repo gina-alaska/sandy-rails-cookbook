@@ -1,4 +1,5 @@
 include_recipe "chef-vault"
+chef_gem 'foreman'
 
 user node['sandy']['account']
 
@@ -9,6 +10,7 @@ end
 package node['sandy']['application']['name'] do
   version node['sandy']['application']['version']
   action :install
+  notifies :create, "template[#{node['sandy']['install_dir']}/.env]", :immediately
 end
 
 database_config = chef_vault_item(:sandy, 'database')
@@ -41,6 +43,7 @@ template "#{node['sandy']['install_dir']}/.env" do
     influxdb_username: 'sandy',
     influxdb_password: influx_password,
     influxdb_servers: influx_servers,
+    sidekiq_queue: node['sidekiq']['queue']
     redis_url: "redis://#{redis_master['ipaddress']}:6379",
     redis_namespace: node['sandy']['redis']['namespace'],
     sandy_cache_path: node['sandy']['cache_dir'],
@@ -50,6 +53,11 @@ template "#{node['sandy']['install_dir']}/.env" do
   } })
 end
 
+execute 'generate_init_scripts' do
+  command '/opt/chef/embedded/bin/foreman export runit /etc/init.d -s sandy'
+  action :nothing
+  subscribes :run, "template[#{node['sandy']['install_dir']}/.env]", :immediately
+end
 # db_master = search(:node, 'roles:sandy-database').first
 # db_master = node if db_master.nil?
 #
