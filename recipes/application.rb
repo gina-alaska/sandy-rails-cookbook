@@ -1,5 +1,7 @@
 include_recipe "chef-vault"
-chef_gem 'foreman'
+chef_gem 'foreman' do
+  compile_time false
+end
 
 user node['sandy']['account']
 
