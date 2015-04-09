@@ -43,7 +43,7 @@ end
 template "#{node['sandy']['install_dir']}/sandy/.env" do
   source 'foreman_env.erb'
   variables({ env: {
-    rails_environment: node['sandy']['environment'],
+    rails_env: node['sandy']['environment'],
     rails_database: "sandy_#{node['sandy']['environment']}",
     rails_database_username: 'sandy',
     rails_database_password: database_config['passwords']['sandy'],
