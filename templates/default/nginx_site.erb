@@ -1,5 +1,5 @@
 upstream <%= @name %>_proxy {
-  server unix:<%= @socket %> fail_timeout=0;
+  server localhost:3000 fail_timeout=1;
 }
 
 server {

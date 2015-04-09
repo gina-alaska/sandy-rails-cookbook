@@ -1,13 +1,8 @@
-default['unicorn_config_path'] = '/etc/unicorn'
-
 default['sandy']['account'] = "webdev"
-default['sandy']['environment'] = "production"
-default['sandy']['git-repo'] = 'git://github.com/gina-alaska/sandy-rails'
-default['sandy']['git-revision'] = 'master'
-default['sandy']['git-action'] = 'checkout'
+default['sandy']['environment'] = "development"
 
 #Path configuration
-default['sandy']['install_dir'] = '/opt/sandy/sandy'
+default['sandy']['install_dir'] = '/opt/sandy'
 default['sandy']['application'] = {
   'name' => 'sandy',
   'version' => '0.0.1-1'

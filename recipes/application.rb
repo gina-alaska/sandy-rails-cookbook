@@ -12,7 +12,7 @@ end
 package node['sandy']['application']['name'] do
   version node['sandy']['application']['version']
   action :install
-  notifies :create, "template[#{node['sandy']['install_dir']}/.env]", :immediately
+  notifies :create, "template[#{node['sandy']['install_dir']}/sandy/.env]", :immediately
 end
 
 database_config = chef_vault_item(:sandy, 'database')
@@ -32,7 +32,15 @@ env_path = [
   "#{node['sandy']['worker']['scripts-path']}/bin"
 ].join(':')
 
-template "#{node['sandy']['install_dir']}/.env" do
+template '/etc/profile.d/sandy_path.sh' do
+  source 'sandy_path.sh.erb'
+  mode 0644
+  variables({
+    path: node['sandy']['install_dir']
+    })
+end
+
+template "#{node['sandy']['install_dir']}/sandy/.env" do
   source 'foreman_env.erb'
   variables({ env: {
     rails_environment: node['sandy']['environment'],
@@ -55,9 +63,27 @@ template "#{node['sandy']['install_dir']}/.env" do
   } })
 end
 
+runit_template_path = ::File.join(Chef::Config[:file_cache_path], 'sandy-runit-template')
+
+directory runit_template_path
+
+cookbook_file ::File.join(runit_template_path, "run.erb") do
+  source 'foreman-run.erb'
+end
+
+foreman_cmd = [
+  '/opt/chef/embedded/bin/foreman',
+  'export',
+  'runit',
+  '/etc/service',
+  '-a sandy',
+  "-u #{node['sandy']['account']}",
+  "-t #{runit_template_path}"
+].join(" ")
+
 execute 'generate_init_scripts' do
-  command "/opt/chef/embedded/bin/foreman export runit /etc/service -a sandy -u #{node['sandy']['account']}"
-  cwd node['sandy']['install_dir']
+  command foreman_cmd
+  cwd "#{node['sandy']['install_dir']}/sandy"
   action :nothing
-  subscribes :run, "template[#{node['sandy']['install_dir']}/.env]", :immediately
+  subscribes :run, "template[#{node['sandy']['install_dir']}/sandy/.env]", :immediately
 end
