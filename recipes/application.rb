@@ -56,7 +56,7 @@ template "#{node['sandy']['install_dir']}/.env" do
 end
 
 execute 'generate_init_scripts' do
-  command '/opt/chef/embedded/bin/foreman export runit /etc/sv -a sandy'
+  command "/opt/chef/embedded/bin/foreman export runit /etc/service -a sandy -u #{node['sandy']['account']}"
   cwd node['sandy']['install_dir']
   action :nothing
   subscribes :run, "template[#{node['sandy']['install_dir']}/.env]", :immediately
