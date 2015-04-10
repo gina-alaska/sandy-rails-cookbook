@@ -1,6 +1,10 @@
 include_recipe 'runit'
 include_recipe 'sandy::application'
 
+include_recipe 'yum-gina'
+package node['sandy']['ruby']['package']
+include_recipe 'chruby'
+
 directory node['sandy']['worker']['scripts-path'] do
   owner node['sandy']['account']
   group node['sandy']['account']
