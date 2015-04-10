@@ -48,7 +48,7 @@ template "#{node['sandy']['install_dir']}/sandy/.env" do
     rails_database_username: 'sandy',
     rails_database_password: database_config['passwords']['sandy'],
     rails_database_host: database_host['ipaddress'],
-    rails_secret_key_base: node['sandy']['rails']['secret_key_base'],
+    secret_key_base: node['sandy']['rails']['secret_key_base'],
     influxdb_database: 'sandy-metrics',
     influxdb_username: 'sandy',
     influxdb_password: influx_password,
@@ -59,7 +59,8 @@ template "#{node['sandy']['install_dir']}/sandy/.env" do
     sandy_cache_path: node['sandy']['cache_dir'],
     sandy_scratch_path: node['sandy']['scratch_dir'],
     processing_number_of_cpus: node['cpu']['total'],
-    path: env_path
+    path: env_path,
+    port: node['sandy']['puma_port']
   } })
 end
 

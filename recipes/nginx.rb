@@ -16,7 +16,8 @@ template "/etc/nginx/sites-available/sandy_site" do
     install_path: "#{node['sandy']['install_dir']}/sandy",
     name: 'sandy',
     user: node['sandy']['account'],
-    environment: node['sandy']['environment']
+    environment: node['sandy']['environment'],
+    port: node['sandy']['puma_port']
   })
 end
 

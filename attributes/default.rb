@@ -27,3 +27,5 @@ default['sandy']['database']['hostname'] = "localhost"
 
 default['sandy']['redis']['url'] = 'redis://localhost:6379'
 default['sandy']['redis']['namespace'] = 'sandy'
+
+default['sandy']['puma_port'] = '5000'
