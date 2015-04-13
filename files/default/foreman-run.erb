@@ -1,7 +1,0 @@
-#!/bin/sh
-
-export PATH=<%= File.expand_path(File.join(engine.root, '..', 'embedded', 'bin')) %>:$PATH
-
-cd <%= engine.root %>
-exec 2>&1
-exec chpst -u <%= user %> -e <%= File.join(location, "#{process_directory}/env")  %> <%= process.command %>

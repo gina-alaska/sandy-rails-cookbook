@@ -1,0 +1,8 @@
+{
+  "id": "influxdb",
+  "run_list": ["role[sandy-influxdb]"],
+  "automatic": {
+    "ipaddress": "10.0.0.76",
+    "roles": ["sandy-influxdb"]
+  }
+}

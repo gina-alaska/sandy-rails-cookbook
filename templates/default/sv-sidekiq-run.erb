@@ -1,7 +1,8 @@
 #!/bin/bash
 
-cd <%= @options[:app_dir] %>
+cd <%= node['sandy']['home'] %>/current
+
 exec 2>&1
-exec chpst -u <%= @options[:user] %> -e /etc/sv/sidekiq/env \
-  chruby-exec <%= @options[:rubyversion] %> \
-  -- bundle exec sidekiq -e <%=@options[:environment]%> -C config/sidekiq.yml -p <%= @options[:pidfile] %>
+exec chpst -u processing -e /etc/service/sidekiq/env \
+  bundle exec sidekiq -C /etc/sidekiq/sidekiq.yml \
+  -t 30 -e production

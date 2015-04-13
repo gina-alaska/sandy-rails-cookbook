@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd "#{node['sandy']['home']}/current"
+
+exec 2>&1
+exec chpst -u processing -e /etc/service/web/env bundle exec puma -C config/puma.rb

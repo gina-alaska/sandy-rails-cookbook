@@ -1,4 +1,4 @@
-app_name = "sandy"
+include_recipe 'chef-vault'
 
 yum_package 'ca-certificates' do
 	action :nothing
@@ -6,16 +6,18 @@ end.run_action(:upgrade)
 
 include_recipe 'yum-epel'
 
+app = chef_vault_item(:apps, node['sandy']['data_bag'])
+
 node.default['postgresql']['pg_hba'] += [{
 	:type => 'host',
-	:db => node[app_name]['database']['database'],
-	:user => node[app_name]['database']['username'],
+	:db => app['env']['rails_database'],
+	:user => app['env']['rails_database_username'],
 	:addr => 'all',
 	:method => 'trust'
 },{
   :type => 'host',
   :db => 'postgres',
-  :user => node[app_name]['database']['username'],
+  :user => app['env']['rails_database_username'],
   :addr => 'all',
   :method => 'trust'
 }]
@@ -23,32 +25,31 @@ node.default['postgresql']['pg_hba'] += [{
 include_recipe 'postgresql::server'
 include_recipe 'database::postgresql'
 include_recipe 'postgresql::ruby'
-include_recipe 'chef-vault'
 
 postgresql_connection_info = {
 	host: '127.0.0.1',
 	port: 5432,
 	username: 'postgres',
-	password: chef_vault_item(:sandy, 'database')['passwords']['postgres'] #node['postgresql']['password']['postgres']
+	password: app['passwords']['postgres']
 }
 
 # create a postgresql database
-postgresql_database node[app_name]['database']['database'] do
+postgresql_database app['env']['rails_database'] do
   connection postgresql_connection_info
   action :create
 end
 
 # Create a postgresql user but grant no privileges
-postgresql_database_user node[app_name]['database']['username'] do
+postgresql_database_user app['env']['rails_database_username'] do
   connection postgresql_connection_info
-  password   chef_vault_item(:sandy, 'database')['passwords'][node[app_name]['database']['username']]  #node[app_name]['database']['password']
+  password   app['passwords']['sandy']  #node[app_name]['database']['password']
   action     :create
 end
 
 # Grant all privileges on all tables in foo db
-postgresql_database_user node[app_name]['database']['username'] do
+postgresql_database_user 'sandy' do
   connection    postgresql_connection_info
-  database_name  node[app_name]['database']['database']
+  database_name  app['env']['rails_database']
   privileges    [:all]
   action        :grant
 end

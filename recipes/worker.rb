@@ -1,38 +1,52 @@
+tag('worker')
+
+include_recipe 'chef-vault'
 include_recipe 'runit'
-include_recipe 'sandy::application'
+include_recipe 'git'
+include_recipe 'postgresql::client'
+include_recipe "sandy::_user"
+include_recipe "sandy::_ruby"
+include_recipe "sandy::_application"
 
-include_recipe 'yum-gina'
-package node['sandy']['ruby']['package']
-include_recipe 'chruby'
-
-directory node['sandy']['worker']['scripts-path'] do
-  owner node['sandy']['account']
-  group node['sandy']['account']
+directory node['sandy']['worker']['home'] do
+  owner 'processing'
+  group 'processing'
+  recursive true
 end
 
-git node['sandy']['worker']['scripts-path'] do
-  repository node['sandy']['worker']['scripts-git-repo']
-  revision node['sandy']['worker']['scripts-git-revision']
-  action node['sandy']['worker']['scripts-git-action']
+directory "#{node['sandy']['worker']['home']}/shared" do
+  owner 'processing'
+  group 'processing'
+  recursive true
 end
 
-execute 'bundle-install' do
-  command "chruby-exec #{node['sandy']['ruby']['version']} -- bundle install --deployment --path /home/#{node['sandy']['account']}/.bundle"
-  cwd node['sandy']['worker']['scripts-path']
-  user node['sandy']['account']
-  group node['sandy']['account']
-  action :nothing
-  subscribes :run, "git[#{node['sandy']['worker']['scripts-path']}]", :delayed
+directory "#{node['sandy']['worker']['home']}/shared/bundle" do
+  owner 'processing'
+  group 'processing'
+  recursive true
 end
 
-runit_service "sandy-default-worker-1" do
-  sv_templates false
+deploy_revision node['sandy']['worker']['home'] do
+  repo node['sandy']['worker']['repo']
+  revision node['sandy']['worker']['revision']
+  user 'processing'
+  group 'processing'
+  action node['sandy']['worker']['deploy_action'] || 'deploy'
+
+  before_restart do
+    execute 'bundle install' do
+      cwd release_path
+      user 'processing'
+      group 'processing'
+      command "bundle install --without test development --path=#{node['sandy']['worker']['home']}/shared/bundle"
+    end
+  end
+end
+
+runit_service "sidekiq" do
   action [:start, :enable]
-  subscribes :restart, "template[#{node['sandy']['install_dir']}/sandy/.env]"
-end
+  env Sandy::Config.environment_for(environment)
 
-runit_service "sandy-worker-1" do
-  sv_templates false
-  action [:start, :enable]
-  subscribes :restart, "template[#{node['sandy']['install_dir']}/sandy/.env]"
+  subscribes :restart, "deploy_revision[#{node['sandy']['home']}]"
+  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]"
 end

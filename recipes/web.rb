@@ -1,10 +1,20 @@
-include_recipe 'runit'
-include_recipe "sandy::application"
+tag('web')
 
-runit_service "sandy-web-1" do
-  sv_templates false
+include_recipe 'chef-vault'
+include_recipe 'runit'
+include_recipe 'git'
+include_recipe 'postgresql::client'
+include_recipe "sandy::_user"
+include_recipe "sandy::_ruby"
+include_recipe "sandy::_application"
+
+
+runit_service "puma" do
   action [:start, :enable]
-  subscribes :restart, "template[#{node['sandy']['install_dir']}/sandy/.env]"
+  env Sandy::Config.environment_for(environment)
+
+  subscribes :restart, "deploy_revision[#{node['sandy']['home']}]"
+  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]"
 end
 
-include_recipe "sandy::nginx"
+include_recipe "sandy::_nginx"

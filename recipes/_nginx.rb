@@ -13,9 +13,8 @@ end
 template "/etc/nginx/sites-available/sandy_site" do
   source 'nginx_site.erb'
   variables({
-    install_path: "#{node['sandy']['install_dir']}/sandy",
+    install_path: "#{node['sandy']['home']}/sandy",
     name: 'sandy',
-    user: node['sandy']['account'],
     environment: node['sandy']['environment'],
     port: node['sandy']['puma_port']
   })

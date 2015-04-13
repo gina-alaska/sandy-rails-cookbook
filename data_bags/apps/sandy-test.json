@@ -1,0 +1,20 @@
+{
+  "id": "sandy-test",
+  "repository": "https://github.com/gina-alaska/sandy-rails",
+  "revision": "master",
+  "passwords": {
+    "postgres": "sandy-in-the-kitchen-sink",
+    "sandy":  "sandy-in-the-kitchen-sink",
+    "influxdb": "time-warp"
+  },
+  "env": {
+    "influxdb_database": "sandy-metrics",
+    "influxdb_username": "sandy",
+    "port": 5000,
+    "rails_database": "sandy-kitchen",
+    "rails_database_username": "sandy",
+    "rails_env": "development",
+    "redis_namespace": "sandy-test",
+    "secret_key_base": "sdflksajldkfjaslkdjfalskjbeflaksjbflkasjbdlfkjabslkejfbaslkjdbflaskjeb"
+  }
+}
