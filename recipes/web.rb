@@ -15,7 +15,7 @@ runit_service "puma" do
   default_logger true
   env({
     "RAILS_ENV" => 'production',
-    "PORT" => node['sandy']['puma_port']
+    "PORT" => node['sandy']['puma_port'],
     "PUMA_PIDFILE" => "#{node['sandy']['home']}/shared/pids/puma.pid"
   })
 
