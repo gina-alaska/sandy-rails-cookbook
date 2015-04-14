@@ -37,7 +37,7 @@ template "#{node['sandy']['home']}/shared/.env.production" do
      redis_url: "redis://#{redis_master.first['ip']}:6379",
      sidekiq_queue: node['sandy']['worker']['queue'],
      processing_number_of_cpus: node['cpu']['total'],
-     sandy_cache_path: node['sandy']['cache_dir'],
+     sandy_shared_path: node['sandy']['shared_dir'],
      sandy_scratch_path: node['sandy']['scratch_dir'],
      path: "$PATH:#{node['sandy']['worker']['home']}/current/bin"
    })
