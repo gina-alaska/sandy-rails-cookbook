@@ -3,6 +3,5 @@
 cd <%= node['sandy']['home'] %>/current
 
 exec 2>&1
-exec chpst -u processing -e /etc/service/sidekiq/env \
-  bundle exec sidekiq -C /etc/sidekiq/sidekiq.yml \
-  -t 30 -e production
+exec chpst -u processing -e /etc/sv/sidekiq/env \
+  chruby-exec <%= node['sandy']['ruby']['version'] %> -- bundle exec sidekiq -t 30 -e production

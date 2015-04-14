@@ -25,6 +25,7 @@ redis_master = search(:node, 'roles:sandy-redis', filter_result: {'ip' => ['ipad
 influx_servers = search(:node, 'roles:sandy-influxdb', filter_result: {'ip' => ['ipaddress']})
 
 template "#{node['sandy']['home']}/shared/.env.production" do
+  source "env.erb"
   user 'processing'
   group 'processing'
 
@@ -49,16 +50,17 @@ deploy_revision node['sandy']['home'] do
   user 'processing'
   group 'processing'
   migrate true
-  migration_command 'bundle exec foreman run rake db:migrate'
+  migration_command 'bundle exec rake db:migrate'
   environment 'RAILS_ENV' => 'production'
   action node['sandy']['deploy_action'] || 'deploy'
 
   symlink_before_migrate({
-    '.env.production' => '.env'
+    '.env.production' => '.env',
+    'tmp' => 'tmp'
   })
 
   before_migrate do
-    %w(pids log system public).each do |dir|
+    %w(pids log system public tmp).each do |dir|
       directory "#{node['sandy']['home']}/shared/#{dir}" do
         mode 0755
         recursive true
@@ -81,7 +83,7 @@ deploy_revision node['sandy']['home'] do
       environment 'RAILS_ENV' => 'production'
       cwd release_path
       command 'bundle exec rake assets:precompile'
-      only_if { node.tagged?('web') }
+      only_if { node['sandy']['precompile_assets'] }
     end
   end
 

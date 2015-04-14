@@ -44,9 +44,12 @@ deploy_revision node['sandy']['worker']['home'] do
 end
 
 runit_service "sidekiq" do
-  action [:start, :enable]
-  env Sandy::Config.environment_for(environment)
+  action [:enable, :start]
+  log true
+  default_logger true
+  env({"RAILS_ENV" => 'production'})
 
-  subscribes :restart, "deploy_revision[#{node['sandy']['home']}]"
-  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]"
+
+  subscribes :restart, "deploy_revision[#{node['sandy']['home']}]", :delayed
+  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
 end

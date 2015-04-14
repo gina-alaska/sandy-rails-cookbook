@@ -1,5 +1,5 @@
 tag('web')
-
+node.set['sandy']['precompile_assets'] = true
 include_recipe 'chef-vault'
 include_recipe 'runit'
 include_recipe 'git'
@@ -10,11 +10,16 @@ include_recipe "sandy::_application"
 
 
 runit_service "puma" do
-  action [:start, :enable]
-  env Sandy::Config.environment_for(environment)
+  action [:enable, :start]
+  log true
+  default_logger true
+  env({
+    "RAILS_ENV" => 'production',
+    "PORT" => node['sandy']['puma_port']
+  })
 
-  subscribes :restart, "deploy_revision[#{node['sandy']['home']}]"
-  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]"
+  subscribes :restart, "deploy_revision[#{node['sandy']['home']}]", :delayed
+  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
 end
 
 include_recipe "sandy::_nginx"

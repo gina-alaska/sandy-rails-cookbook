@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd "#{node['sandy']['home']}/current"
+cd <%= "#{node['sandy']['home']}/current" %>
 
 exec 2>&1
-exec chpst -u processing -e /etc/service/web/env bundle exec puma -C config/puma.rb
+exec chpst -u processing  -e /etc/sv/puma/env \
+  chruby-exec <%= node['sandy']['ruby']['version'] %> -- bundle exec puma -C config/puma.rb
