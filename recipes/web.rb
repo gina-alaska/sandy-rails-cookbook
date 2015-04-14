@@ -19,8 +19,8 @@ runit_service "puma" do
     "PUMA_PIDFILE" => "#{node['sandy']['home']}/shared/pids/puma.pid"
   })
 
-  subscribes :restart, "deploy_revision[#{node['sandy']['home']}]", :delayed
-  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
+  subscribes :usr2, "deploy_revision[#{node['sandy']['home']}]", :delayed
+  subscribes :usr2, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
 end
 
 include_recipe "sandy::_nginx"
