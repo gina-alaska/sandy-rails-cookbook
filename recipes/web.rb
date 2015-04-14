@@ -16,6 +16,7 @@ runit_service "puma" do
   env({
     "RAILS_ENV" => 'production',
     "PORT" => node['sandy']['puma_port']
+    "PUMA_PIDFILE" => "#{node['sandy']['home']}/shared/pids/puma.pid"
   })
 
   subscribes :restart, "deploy_revision[#{node['sandy']['home']}]", :delayed
