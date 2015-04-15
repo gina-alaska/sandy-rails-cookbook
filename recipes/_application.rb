@@ -44,6 +44,14 @@ template "#{node['sandy']['home']}/shared/.env.production" do
   })
 end
 
+template "#{node['sandy']['home']}/shared/sidekiq.yml" do
+  source 'sidekiq.yml.erb'
+  user 'processing'
+  group 'processing'
+
+  variables({queues: node['sandy']['worker']['queues']})
+end
+
 deploy_revision node['sandy']['home'] do
   repo app['repository']
   revision app['revision']
@@ -56,7 +64,8 @@ deploy_revision node['sandy']['home'] do
 
   symlink_before_migrate({
     '.env.production' => '.env',
-    'tmp' => 'tmp'
+    'tmp' => 'tmp',
+    'sidekiq.yml' => 'config/sidekiq.yml'
   })
 
   before_migrate do
