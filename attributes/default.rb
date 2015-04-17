@@ -13,7 +13,7 @@ default['sandy']['worker']['home'] = '/opt/processing-scripts'
 default['sandy']['worker']['repo'] = 'git://github.com/gina-alaska/sandy-utils'
 default['sandy']['worker']['revision'] = 'master'
 default['sandy']['worker']['deploy_action'] = 'deploy'
-default['sandy']['worker']['queue'] = nil
+default['sandy']['worker']['queues'] = []
 
 default['sandy']['database']['hostname'] = "localhost"
 
