@@ -7,6 +7,7 @@ include_recipe 'postgresql::client'
 include_recipe "sandy::_user"
 include_recipe "sandy::_ruby"
 include_recipe "sandy::_application"
+include_recipe "sandy::_storage"
 
 directory node['sandy']['worker']['home'] do
   owner 'processing'

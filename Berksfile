@@ -17,5 +17,10 @@ cookbook 'redisio'
 cookbook 'git'
 cookbook 'chef-vault', '>= 1.2.5'
 cookbook 'build-essential'
+cookbook 'lvm'
+cookbook 'parted'
+cookbook 'resource-control'  # Why?
+cookbook 'gina-gluster', git: 'git@github.com:gina-alaska/gina-gluster-cookbook'
+cookbook 'xfs'
 
 metadata
