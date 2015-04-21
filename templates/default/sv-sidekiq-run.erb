@@ -6,4 +6,4 @@ export PATH=$PATH:<%=node['sandy']['worker']['home']%>/current/bin
 
 exec 2>&1
 exec chpst -u processing -e /etc/sv/sidekiq/env \
-  chruby-exec <%= node['sandy']['ruby']['version'] %> -- bundle exec sidekiq -t 30 -e production
+  bundle exec sidekiq -t 30 -e production
