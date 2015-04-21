@@ -8,7 +8,7 @@ default['sandy']['home'] = '/www/sandy'
 default['sandy']['scratch_dir'] = "/tmp/scratch"
 default['sandy']['shared_dir'] = "/tmp/shared"
 
-default['sandy']['worker']['user']
+default['sandy']['worker']['data_bag'] = 'sandy-utils-production'
 default['sandy']['worker']['home'] = '/opt/processing-scripts'
 default['sandy']['worker']['repo'] = 'git://github.com/gina-alaska/sandy-utils'
 default['sandy']['worker']['revision'] = 'master'
@@ -26,3 +26,4 @@ default['sandy']['ruby'] = {
   'version' => 'ruby-2.1.1',
   'package' => 'gina-ruby-21'
 }
+default['sandy']['storage']['actions'] = [:mount, :enable]
