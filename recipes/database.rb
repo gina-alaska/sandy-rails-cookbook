@@ -9,6 +9,8 @@ include_recipe 'yum-epel'
 
 app = chef_vault_item(:apps, node['sandy']['data_bag'])
 
+node.set['postgresql']['password']['postgres'] = app['passwords']['postgres']
+
 node.default['postgresql']['pg_hba'] += [{
 	:type => 'host',
 	:db => app['env']['rails_database'],
@@ -53,4 +55,11 @@ postgresql_database_user 'sandy' do
   database_name  app['env']['rails_database']
   privileges    [:all]
   action        :grant
+end
+
+ruby_block 'smash-postgres-auth-attributes' do
+  block do
+    node.rm('postgresql', 'password', 'postgres')
+  end
+  # subscribes :create, 'bash[assign-postgres-password]', :immediately
 end
