@@ -14,23 +14,25 @@ suites:
       - recipe[sandy::default]
     attributes:
       sandy:
-        git-action: 'sync'
+        storage:
+          actions: ['nothing']
         worker:
-          scripts-git-action: 'sync'
-        database:
-          password: 'sandy-test-kitchen'
+          data_bag: 'sandy-utils-kitchen'
   - name: worker
     run_list:
+      - recipe[sandy::database]
+      - recipe[sandy::redis]
       - recipe[sandy::worker]
     attributes:
       sandy:
-        account: 'processing'
-        git-action: :sync
+        storage:
+          actions: ['nothing']
   - name: web
     run_list:
+      - recipe[sandy::database]
+      - recipe[sandy::redis]
       - recipe[sandy::web]
     attributes:
       sandy:
-        account: 'webdev'
-        application:
-          version: '0.0.2-1'
+        storage:
+          actions: ['nothing']
