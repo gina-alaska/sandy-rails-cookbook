@@ -24,6 +24,10 @@ database_host = search(:node, 'roles:sandy-database', filter_result: {'ip' => ['
 redis_master = search(:node, 'roles:sandy-redis', filter_result: {'ip' => ['ipaddress']})
 influx_servers = search(:node, 'roles:sandy-influxdb', filter_result: {'ip' => ['ipaddress']})
 
+database_host  = [{'ip' => node['ipaddress']}] if database_host.empty?
+redis_master   = [{'ip' => node['ipaddress']}] if redis_master.empty?
+influx_servers = [{'ip' => node['ipaddress']}] if influx_servers.empty?
+
 template "#{node['sandy']['home']}/shared/.env.production" do
   source "env.erb"
   user 'processing'
