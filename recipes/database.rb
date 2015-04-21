@@ -1,3 +1,4 @@
+include_recipe "postgresql::ruby"
 include_recipe 'chef-vault'
 
 yum_package 'ca-certificates' do
@@ -22,9 +23,9 @@ node.default['postgresql']['pg_hba'] += [{
   :method => 'trust'
 }]
 
+
 include_recipe 'postgresql::server'
 include_recipe 'database::postgresql'
-include_recipe 'postgresql::ruby'
 
 postgresql_connection_info = {
 	host: '127.0.0.1',
