@@ -33,7 +33,7 @@ directory "#{node['sandy']['worker']['home']}/shared/config" do
   recursive true
 end
 
-confs = data_bag_item(:apps, 'sandy-utils-production')['configs']
+confs = data_bag_item(:apps, node['sandy']['worker']['data_bag'])['configs']
 
 confs.each do |f, conf|
   file "#{node['sandy']['worker']['home']}/shared/config/#{f}" do
