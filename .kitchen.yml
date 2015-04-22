@@ -27,6 +27,8 @@ suites:
       sandy:
         storage:
           actions: ['nothing']
+        worker:
+          data_bag: sandy-utils-kitchen
   - name: web
     run_list:
       - recipe[sandy::database]
@@ -36,3 +38,5 @@ suites:
       sandy:
         storage:
           actions: ['nothing']
+        worker:
+          data_bag: sandy-utils-kitchen

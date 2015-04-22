@@ -1,8 +1,0 @@
-{
-  "id": "redis",
-  "run_list": ["role[sandy-redis]"],
-  "automatic": {
-    "ipaddress": "10.0.0.77",
-    "roles": ["sandy-redis"]
-  }
-}
