@@ -1,8 +1,0 @@
-{
-  "id": "database",
-  "run_list": ["role[sandy-database]"],
-  "automatic": {
-    "ipaddress": "10.0.0.75",
-    "roles": ["sandy-database"]
-  }
-}
