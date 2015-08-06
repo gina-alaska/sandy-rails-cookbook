@@ -4,6 +4,16 @@ cd <%= node['sandy']['home'] %>/current
 
 export PATH=$PATH:<%=node['sandy']['worker']['home']%>/current/bin
 
+for i in /etc/profile.d/*.sh ; do
+    if [ -r "$i" ]; then
+        if [ "${-#*i}" != "$-" ]; then
+            . "$i"
+        else
+            . "$i" >/dev/null 2>&1
+        fi
+    fi
+done
+
 exec 2>&1
 exec chpst -u processing -e /etc/sv/sidekiq/env \
   bundle exec sidekiq -t 30 -e production
