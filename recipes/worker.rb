@@ -67,11 +67,15 @@ runit_service "sidekiq" do
   action [:enable, :start]
   log true
   default_logger true
+  sv_timeout 930
+
   env({
     "RAILS_ENV" => 'production',
     "PROCESSING_NUMBER_OF_CPUS" => "#{node['cpu']['total']}"
     })
 
+  subscribes :usr1, "deploy_revision[#{node['sandy']['home']}]", :immediately
+  subscribes :usr1, "template[#{node['sandy']['home']}/shared/.env.production]", :immediately
   subscribes :restart, "deploy_revision[#{node['sandy']['home']}]", :delayed
   subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
 end

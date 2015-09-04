@@ -23,7 +23,7 @@ default['sandy']['redis']['namespace'] = 'sandy'
 default['sandy']['puma_port'] = '5000'
 
 default['sandy']['ruby'] = {
-  'version' => 'ruby-2.1.1',
-  'package' => 'gina-ruby-21'
+  'version' => 'ruby-2.2.0',
+  'package' => 'gina-ruby'
 }
 default['sandy']['storage']['actions'] = [:mount, :enable]

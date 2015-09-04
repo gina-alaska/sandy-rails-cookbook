@@ -60,7 +60,7 @@ deploy_revision node['sandy']['home'] do
   revision app['revision']
   user 'processing'
   group 'processing'
-  migrate true
+  migrate false
   migration_command 'bundle exec rake db:migrate'
   environment 'RAILS_ENV' => 'production'
   action node['sandy']['deploy_action'] || 'deploy'

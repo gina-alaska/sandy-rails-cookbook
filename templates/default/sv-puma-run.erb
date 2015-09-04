@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cd <%= "#{node['sandy']['home']}/current" %>
+cd <%= node['sandy']['home'] %>/current
 
 exec 2>&1
 exec chpst -u processing  -e /etc/sv/puma/env \
-  bundle exec puma -C config/puma.rb
+  bundle exec puma -C config/puma.rb --dir <%= @options[:release_path] %>

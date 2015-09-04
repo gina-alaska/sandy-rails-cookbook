@@ -18,9 +18,13 @@ runit_service "puma" do
     "PORT" => node['sandy']['puma_port'],
     "PUMA_PIDFILE" => "#{node['sandy']['home']}/shared/pids/puma.pid"
   })
+  options({
+    release_path: "#{node['sandy']['home']}/current"
+  })
 
-  subscribes :usr2, "deploy_revision[#{node['sandy']['home']}]", :delayed
-  subscribes :usr2, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
+  ignore_failure true
+  subscribes :usr1, "deploy_revision[#{node['sandy']['home']}]", :delayed
+  subscribes :usr1, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
 end
 
 include_recipe "sandy::_nginx"

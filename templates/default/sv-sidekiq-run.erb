@@ -16,4 +16,4 @@ done
 
 exec 2>&1
 exec chpst -u processing -e /etc/sv/sidekiq/env \
-  bundle exec sidekiq -t 30 -e production
+  bundle exec sidekiq -e production
