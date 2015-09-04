@@ -1,22 +1,7 @@
-directory node['sandy']['home'] do
-  user 'processing'
-  group 'processing'
-  mode 0755
-  recursive true
-end
-
-directory "#{node['sandy']['home']}/shared" do
-  user 'processing'
-  group 'processing'
-  mode 755
-  recursive true
-end
-
-directory "#{node['sandy']['home']}/shared/bundle" do
-  user 'processing'
-  group 'processing'
-  mode 0755
-  recursive true
+packagecloud_repo "sdmacfarlane/demo"
+package 'sandy' do
+  action :install
+  version '0.5.1-1.el6'
 end
 
 app = chef_vault_item(:apps, node['sandy']['data_bag'])
@@ -28,7 +13,7 @@ database_host  = [{'ip' => node['ipaddress']}] if database_host.empty?
 redis_master   = [{'ip' => node['ipaddress']}] if redis_master.empty?
 influx_servers = [{'ip' => node['ipaddress']}] if influx_servers.empty?
 
-template "#{node['sandy']['home']}/shared/.env.production" do
+template "#{node['sandy']['home']}/embedded/service/sandy/.env" do
   source "env.erb"
   user 'processing'
   group 'processing'
@@ -47,7 +32,7 @@ template "#{node['sandy']['home']}/shared/.env.production" do
   })
 end
 
-template "#{node['sandy']['home']}/shared/sidekiq.yml" do
+template "#{node['sandy']['home']}/embedded/service/sandy/config/sidekiq.yml" do
   source 'sidekiq.yml.erb'
   user 'processing'
   group 'processing'
@@ -55,56 +40,56 @@ template "#{node['sandy']['home']}/shared/sidekiq.yml" do
   variables({queues: node['sandy']['worker']['queues']})
 end
 
-deploy_revision node['sandy']['home'] do
-  repo app['repository']
-  revision app['revision']
-  user 'processing'
-  group 'processing'
-  migrate true
-  migration_command 'bundle exec rake db:migrate'
-  environment 'RAILS_ENV' => 'production'
-  action node['sandy']['deploy_action'] || 'deploy'
-
-  symlink_before_migrate({
-    '.env.production' => '.env',
-    'tmp' => 'tmp',
-    'sidekiq.yml' => 'config/sidekiq.yml'
-  })
-
-  before_migrate do
-    %w(pids log system public tmp).each do |dir|
-      directory "#{node['sandy']['home']}/shared/#{dir}" do
-        mode 0755
-        recursive true
-      end
-    end
-
-    execute 'bundle install' do
-      cwd release_path
-      user 'processing'
-      group 'processing'
-      command "bundle install --without test development --path=#{node['sandy']['home']}/shared/bundle"
-      environment({"BUNDLE_BUILD__PG" => "--with-pg_config=/usr/pgsql-#{node['postgresql']['version']}/bin/pg_config"})
-    end
-  end
-
-  before_restart do
-    execute 'assets:precompile' do
-      user 'processing'
-      group 'processing'
-      environment 'RAILS_ENV' => 'production'
-      cwd release_path
-      command 'bundle exec rake assets:precompile'
-      only_if { node['sandy']['precompile_assets'] }
-    end
-  end
-
-  after_restart do
-    execute 'chown-release_path-assets' do
-      command "chown -R processing:processing #{release_path}/public/assets"
-      user 'root'
-      action :run
-      only_if { ::File.exists? "#{release_path}/public/assets"}
-    end
-  end
-end
+# deploy_revision node['sandy']['home'] do
+#   repo app['repository']
+#   revision app['revision']
+#   user 'processing'
+#   group 'processing'
+#   migrate true
+#   migration_command 'bundle exec rake db:migrate'
+#   environment 'RAILS_ENV' => 'production'
+#   action node['sandy']['deploy_action'] || 'deploy'
+#
+#   symlink_before_migrate({
+#     '.env.production' => '.env',
+#     'tmp' => 'tmp',
+#     'sidekiq.yml' => 'config/sidekiq.yml'
+#   })
+#
+#   before_migrate do
+#     %w(pids log system public tmp).each do |dir|
+#       directory "#{node['sandy']['home']}/shared/#{dir}" do
+#         mode 0755
+#         recursive true
+#       end
+#     end
+#
+#     execute 'bundle install' do
+#       cwd release_path
+#       user 'processing'
+#       group 'processing'
+#       command "bundle install --without test development --path=#{node['sandy']['home']}/shared/bundle"
+#       environment({"BUNDLE_BUILD__PG" => "--with-pg_config=/usr/pgsql-#{node['postgresql']['version']}/bin/pg_config"})
+#     end
+#   end
+#
+#   before_restart do
+#     execute 'assets:precompile' do
+#       user 'processing'
+#       group 'processing'
+#       environment 'RAILS_ENV' => 'production'
+#       cwd release_path
+#       command 'bundle exec rake assets:precompile'
+#       only_if { node['sandy']['precompile_assets'] }
+#     end
+#   end
+#
+#   after_restart do
+#     execute 'chown-release_path-assets' do
+#       command "chown -R processing:processing #{release_path}/public/assets"
+#       user 'root'
+#       action :run
+#       only_if { ::File.exists? "#{release_path}/public/assets"}
+#     end
+#   end
+# end

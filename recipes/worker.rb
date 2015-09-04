@@ -72,6 +72,8 @@ runit_service "sidekiq" do
     "PROCESSING_NUMBER_OF_CPUS" => "#{node['cpu']['total']}"
     })
 
+  ignore_failure true
+
   subscribes :restart, "deploy_revision[#{node['sandy']['home']}]", :delayed
-  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
+  subscribes :restart, "template[#{node['sandy']['home']}/shared/.env]", :delayed
 end

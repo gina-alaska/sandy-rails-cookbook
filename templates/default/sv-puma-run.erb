@@ -1,6 +1,8 @@
 #!/bin/bash
 
-cd <%= "#{node['sandy']['home']}/current" %>
+export PATH=<%= node['sandy']['home'] %>/embedded/bin:$PATH
+export LD_LIBRARY_PATH=<%= node['sandy']['home'] %>/embedded/lib
+cd <%= node['sandy']['home'] %>/embedded/service/sandy
 
 exec 2>&1
 exec chpst -u processing  -e /etc/sv/puma/env \

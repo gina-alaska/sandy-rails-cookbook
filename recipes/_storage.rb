@@ -30,6 +30,7 @@ mount '/mnt/scratch' do
   device '/dev/vdb1'
   enabled true
   only_if {::File.exist?('/dev/vdb1') }
+  action [:enable, :mount]
 end
 
 directory '/mnt/scratch/workdir' do

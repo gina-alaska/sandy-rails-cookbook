@@ -5,9 +5,13 @@ include_recipe 'runit'
 include_recipe 'git'
 include_recipe 'postgresql::client'
 include_recipe "sandy::_user"
-include_recipe "sandy::_ruby"
 include_recipe "sandy::_application"
 
+
+directory '/var/run/sandy' do
+  owner 'processing'
+  group 'processing'
+end
 
 runit_service "puma" do
   action [:enable, :start]
@@ -16,11 +20,11 @@ runit_service "puma" do
   env({
     "RAILS_ENV" => 'production',
     "PORT" => node['sandy']['puma_port'],
-    "PUMA_PIDFILE" => "#{node['sandy']['home']}/shared/pids/puma.pid"
+    "PUMA_PIDFILE" => "/var/run/sandy/puma.pid"
   })
 
-  subscribes :usr2, "deploy_revision[#{node['sandy']['home']}]", :delayed
-  subscribes :usr2, "template[#{node['sandy']['home']}/shared/.env.production]", :delayed
+  subscribes :usr1, "install_package[sandy]", :delayed
+  subscribes :usr1, "template[#{node['sandy']['home']}/embedded/service/sandy/.env]", :delayed
 end
 
 include_recipe "sandy::_nginx"
