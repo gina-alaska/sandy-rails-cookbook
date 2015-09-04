@@ -22,5 +22,6 @@ cookbook 'parted'
 cookbook 'resource-control'  # Why?
 cookbook 'gina-gluster', git: 'git@github.com:gina-alaska/gina-gluster-cookbook'
 cookbook 'xfs'
+cookbook 'packagecloud'
 
 metadata
