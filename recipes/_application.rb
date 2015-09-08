@@ -94,7 +94,7 @@ deploy_revision node['sandy']['home'] do
       group 'processing'
       environment 'RAILS_ENV' => 'production'
       cwd release_path
-      command 'bundle exec rake assets:precompile RAILS_ENV=production'
+      command 'bin/rake assets:precompile RAILS_ENV=production'
       only_if { node['sandy']['precompile_assets'] }
     end
   end
