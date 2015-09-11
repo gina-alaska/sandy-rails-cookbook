@@ -44,6 +44,6 @@ end
 
 mount '/gluster/cache' do
   fstype 'glusterfs'
-  device 'pod6.gina.alaska.edu:/gvolSatCache'
-  action node['sandy']['storage']['actions']
+  device node['sandy']['storage']['cache']['device']
+  action node['sandy']['storage']['cache']['actions']
 end
