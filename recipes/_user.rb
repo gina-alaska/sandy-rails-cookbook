@@ -5,6 +5,7 @@ group 'processing' do
 end
 
 user_account 'processing' do
+  uid account['uid'] if account['uid']
   gid 'processing'
   home node['sandy']['home']
   comment 'Sandy Processing'

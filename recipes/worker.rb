@@ -5,9 +5,17 @@ include_recipe 'runit'
 include_recipe 'git'
 include_recipe 'postgresql::client'
 include_recipe "sandy::_user"
-include_recipe "sandy::_ruby"
 include_recipe "sandy::_application"
 include_recipe "sandy::_storage"
+include_recipe "yum-gina"
+
+package node['sandy']['ruby']['package']
+
+%w(bundle bundler ruby).each do |rb|
+  link "/usr/bin/#{rb}" do
+    to "/opt/rubies/#{node['sandy']['ruby']['version']}/bin/#{rb}"
+  end
+end
 
 directory node['sandy']['worker']['home'] do
   owner 'processing'

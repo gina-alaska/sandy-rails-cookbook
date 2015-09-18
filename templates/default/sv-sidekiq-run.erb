@@ -2,8 +2,6 @@
 
 cd <%= node['sandy']['home'] %>/embedded/service/sandy
 
-export PATH=<%=node['sandy']['home']%>/embedded/bin:<%=node['sandy']['worker']['home']%>/current/bin:$PATH
-
 for i in /etc/profile.d/*.sh ; do
     if [ -r "$i" ]; then
         if [ "${-#*i}" != "$-" ]; then
@@ -14,6 +12,9 @@ for i in /etc/profile.d/*.sh ; do
     fi
 done
 
+#Do this after profile.d;  Some processing scripts are naught and clobber $PATH
+export PATH=$PATH:<%=node['sandy']['home']%>/embedded/bin:<%=node['sandy']['worker']['home']%>/current/bin
+
 exec 2>&1
 exec chpst -u processing -e /etc/sv/sidekiq/env \
-  bundle exec sidekiq -t 30 -e production
+  <%=node['sandy']['home']%>/embedded/bin/bundle exec sidekiq -t 30 -e production
