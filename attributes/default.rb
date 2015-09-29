@@ -1,3 +1,4 @@
+default['sandy']['version'] = "1.0.0-1.el6"
 default['sandy']['environment'] = "development"
 default['sandy']['data_bag'] = 'sandy-test'
 

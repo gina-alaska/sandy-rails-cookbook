@@ -1,7 +1,7 @@
 packagecloud_repo "sdmacfarlane/demo"
 package 'sandy' do
   action :install
-  version '0.7.0-1.el6'
+  version node['sandy']['version']
 end
 
 app = chef_vault_item(:apps, node['sandy']['data_bag'])
