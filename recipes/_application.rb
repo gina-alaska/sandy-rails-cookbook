@@ -40,6 +40,11 @@ template "#{node['sandy']['home']}/embedded/service/sandy/config/sidekiq.yml" do
   variables({queues: node['sandy']['worker']['queues']})
 end
 
+directory "#{node['sandy']['home']}/embedded/service/sandy/tmp" do
+  user 'processing'
+  group 'processing'
+end
+
 # deploy_revision node['sandy']['home'] do
 #   repo app['repository']
 #   revision app['revision']
