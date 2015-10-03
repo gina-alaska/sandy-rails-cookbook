@@ -16,7 +16,7 @@ end
 
 cron 'cleanup-old-passes' do
   time :hourly
-  command "/bin/bash -l -c 'cd /opt/sandy/embedded/service/sandy && bin/rails runner -e production '\''Pass.cleanup_old_passes'\'''"
+  command "/bin/bash -l -c 'cd /opt/sandy/embedded/service/sandy && bin/rails runner -e production '\''CleanupOldPassesJob.perform_later'\'''"
   environment({"PATH" => "$PATH:/opt/sandy/embedded/bin"})
   user 'processing'
 end
