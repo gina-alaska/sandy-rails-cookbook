@@ -1,5 +1,5 @@
 include_recipe 'parted'
-include_recipe 'gina-gluster::client'
+include_recipe 'gina-gluster'
 
 parted_disk '/dev/vdb' do
   label_type 'gpt'
