@@ -1,3 +1,5 @@
+include_recipe "build-essential"
+
 directory node['sandy']['home'] do
   user 'processing'
   group 'processing'
