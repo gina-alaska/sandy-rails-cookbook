@@ -4,7 +4,7 @@ maintainer_email 'support+chef@gina.alaska.edu'
 license          'Apache 2.0'
 description      'Installs/Configures sandy'
 long_description 'Installs/Configures sandy'
-version          '0.9.0'
+version          '0.9.3'
 
 supports "centos", ">= 6.0"
 
