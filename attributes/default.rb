@@ -26,5 +26,5 @@ default['sandy']['ruby'] = {
   'version' => 'ruby-2.2.0',
   'package' => 'gina-ruby'
 }
-default['sandy']['storage']['cache']['device'] = 'pod6.gina.alaska.edu:/gvolSatCache'
+default['sandy']['storage']['cache']['device'] = 'uaf-s-00.x.gina.alaska.edu:/gvolSatCache'
 default['sandy']['storage']['cache']['actions'] = [:mount, :enable]
